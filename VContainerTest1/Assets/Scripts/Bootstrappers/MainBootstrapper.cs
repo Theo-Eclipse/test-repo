@@ -1,13 +1,20 @@
+using System;
 using UnityEngine;
 using VContainer.Unity;
 
 namespace Wolfdev.UI.LifeScopes
 {
-    public class MainBootstrapper : IStartable
+    public class MainBootstrapper : IInitializable, IDisposable
     {
-        public void Start()
+        public void Initialize()
         {
-            Debug.Log("MainBootstrapper started...");
+            Debug.Log("MainBootstrapper Initialized!");
+        }
+
+        public void Dispose()
+        {
+            Debug.Log($"{nameof(MainBootstrapper)} has been disposed...");
+            // TODO release managed resources here
         }
     }
 }
