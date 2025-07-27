@@ -9,23 +9,29 @@ namespace Wolfdev.Services
 {
     public class ServiceInitializer : IAsyncStartable
     {
-        private readonly IEnumerable<IService> services;
+        private readonly IEnumerable<IGameService> _services;
         
-        public ServiceInitializer(IEnumerable<IService> services)
+        public ServiceInitializer(IEnumerable<IGameService> services)
         {
-            this.services = services;
+            _services = services;
         }
         
         public async UniTask StartAsync(CancellationToken cancellation)
         {
-            Debug.Log($"Initializing all {nameof(IService)} implementations in order...");
+            Debug.Log($"Initializing all {nameof(IGameService)} implementations in order...");
 
-            foreach (var service in services)
+            foreach (var service in _services)
             {
-                await service.Initialize();
+                Debug.Log($"Initializing service \"{service.Name}\"");
+                await service.Initialize(null, (message) => OnInitError(service, message));
             }
 
-            Debug.Log($"All {nameof(IService)} implementations initialized.");
+            Debug.Log($"All {nameof(IGameService)} implementations initialized.");
+        }
+        
+        private void OnInitError(IGameService gameService, string message)
+        {
+            Debug.LogError($"<color=red>Error Initializing Service: \"{gameService.Name}\"</color>\n: {message}");
         }
     }
 }

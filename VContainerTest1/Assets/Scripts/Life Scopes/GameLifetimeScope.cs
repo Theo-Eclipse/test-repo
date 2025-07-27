@@ -19,8 +19,8 @@ namespace Wolfdev.LifeScopes
             builder.RegisterMessageBroker<int>(options);
             builder.Register<MessengerService>(Lifetime.Singleton).As<IMessengerService>();
             
-            builder.Register<ServiceA>(Lifetime.Scoped).As<IService>();
-            builder.Register<ServiceB>(Lifetime.Scoped).As<IService>();
+            builder.Register<GameServiceA>(Lifetime.Scoped).As<IGameService>();
+            builder.Register<GameServiceB>(Lifetime.Scoped).As<IGameService>();
             
             builder.RegisterEntryPoint<MainBootstrapper>().AsSelf();
             builder.RegisterEntryPoint<ServiceInitializer>();
