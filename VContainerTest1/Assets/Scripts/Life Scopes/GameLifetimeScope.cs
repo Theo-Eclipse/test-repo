@@ -17,9 +17,10 @@ namespace Wolfdev.LifeScopes
 
             // RegisterMessageBroker: Register for IPublisher<T>/ISubscriber<T>, includes async and buffered.
             builder.RegisterMessageBroker<int>(options);
+            builder.Register<MessengerService>(Lifetime.Singleton).As<IMessengerService>();
             
-            builder.Register<TestServiceA>(Lifetime.Scoped).As<ITestService>();
-            builder.Register<TestServiceB>(Lifetime.Scoped).As<ITestService>();
+            builder.Register<ServiceA>(Lifetime.Scoped).As<IService>();
+            builder.Register<ServiceB>(Lifetime.Scoped).As<IService>();
             
             builder.RegisterEntryPoint<MainBootstrapper>().AsSelf();
             builder.RegisterEntryPoint<ServiceInitializer>();

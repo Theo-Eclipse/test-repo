@@ -2,8 +2,8 @@
 
 namespace Wolfdev.Services.API
 {
-    public interface ITestService
+    public interface IService
     { 
-        UniTask DoStuff();
+        UniTask Initialize();
     }
 }
