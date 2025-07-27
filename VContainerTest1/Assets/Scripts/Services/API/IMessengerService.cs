@@ -8,8 +8,8 @@ namespace Wolfdev.Services.API
         
         void Subscribe<T>(Action<T, object> handler, object subscriber);
 
-        void Unsubscribe<T>(object subscriberId);
+        void Unsubscribe<T>(object subscriber);
         
-        void UnsubscribeAll(object subscriberId);
+        void UnsubscribeAll(object subscriber);
     }
 }

@@ -25,7 +25,7 @@ namespace Wolfdev.Services
 
         public void Dispose()
         {
-            _messenger.Unsubscribe<string>(this);
+            _messenger.UnsubscribeAll(this);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MessagePipe;
 using Wolfdev.MessagePipe;
 using Wolfdev.Services.API;
@@ -23,21 +22,21 @@ namespace Wolfdev.Services
             publisher.Publish(new BaseMessagePayload<T>(payload, source));
         }
 
-        public void Subscribe<T>(Action<T, object> handler, object subscriberId)
+        public void Subscribe<T>(Action<T, object> handler, object subscriber)
         {
-            var key = (typeof(T), subscriberId);
+            var key = (typeof(T), subscriber);
             
             if (_subscriptions.ContainsKey(key)) 
                 return;
             
-            var subscriber = _provider.GetRequiredService<ISubscriber<BaseMessagePayload<T>>>();
-            var disposable = subscriber.Subscribe(payload => handler(payload.Data, payload.Source));
+            var service = _provider.GetRequiredService<ISubscriber<BaseMessagePayload<T>>>();
+            var disposable = service.Subscribe(payload => handler(payload.Data, payload.Source));
             _subscriptions[key] = disposable;
         }
         
-        public void Unsubscribe<T>(object subscriberId)
+        public void Unsubscribe<T>(object subscriber)
         {
-            var key = (typeof(T), subscriberId);
+            var key = (typeof(T), subscriberId: subscriber);
             
             if (!_subscriptions.TryGetValue(key, out var disposable)) 
                 return;
@@ -46,12 +45,16 @@ namespace Wolfdev.Services
             _subscriptions.Remove(key);
         }
         
-        public void UnsubscribeAll(object subscriberId)
+        public void UnsubscribeAll(object subscriber)
         {
-            var keysToRemove = _subscriptions
-                .Where(pair => Equals(pair.Key.Item2, subscriberId))
-                .Select(pair => pair.Key)
-                .ToList();
+            var keysToRemove = new List<(Type, object)>();
+            foreach (var sub in _subscriptions)
+            {
+                if (sub.Key.Item2 == subscriber)
+                {
+                    keysToRemove.Add(sub.Key);
+                }
+            }
 
             foreach (var key in keysToRemove)
             {
